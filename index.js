@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const exec = require("child_process").exec;
-const config = require("./config");
 const get = require("lodash/get");
 const range = require("lodash/range");
 const url = require("url");
@@ -8,6 +7,10 @@ const fetch = require("isomorphic-fetch");
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment");
+
+const configFile = process.argv[2];
+
+const config = JSON.parse(fs.readFileSync(configFile));
 
 const gitDir = path.resolve(__dirname, config.forkDir);
 
@@ -50,13 +53,9 @@ const fetchCurrentWeather = () =>
     protocol: "http",
     host: "api.openweathermap.org",
     pathname: "/data/2.5/weather",
-    query: {
-      lat: config.lat,
-      lon: config.lon,
-      APPID: config.OpenWeatherMapAPI
-    }
+    query: config.OpenWeatherMapQuery
   }))
-  .then(res => res.json());
+  .then(res => res.status!==200 ? new Error(res.statusText) : res.json());
 
 const THREE_HOURS = 3 * 3600 * 1000;
 
@@ -98,15 +97,16 @@ function main (state, save) {
   // commit rain!
 
   function commitRain () {
+    const weather = state.weather;
     const droplets = range(Math.floor(state.totalRain)).map(() =>
       get(state.weather, "snow.3h") ? "⛷" : "💧"
     ).join("")+" ";
-    const weatherDesc = get(state.weather, "weather[0].description", "unknown");
-    const date = moment(1000*get(state.weather, "dt", 0)).format("MMMM Do YYYY, hh:mm");
+    const weatherDesc = get(weather, "weather[0].description", "unknown");
+    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY, hh:mm");
     const weatherIcon =
-    "http://openweathermap.org/img/w/"+get(state.weather, "weather[0].icon")+".png";
+    "http://openweathermap.org/img/w/"+get(weather, "weather[0].icon")+".png";
     const body =
-    "# It rained the last time in Paris on *"+date+"*.\n"+
+    "# It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*.\n"+
     "## "+droplets+"  ["+weatherIcon+"]("+weatherIcon+") "+weatherDesc+"\n"+
     "Humidity "+get(state.weather, "main.humidity", "?")+"%\n";
     const description = droplets+" "+weatherDesc;

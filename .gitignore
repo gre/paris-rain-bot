@@ -2,4 +2,4 @@ bot-state
 bot-gitfork
 node_modules
 .DS_Store
-config.js
+configs/*
