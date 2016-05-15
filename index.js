@@ -106,7 +106,7 @@ function main (state, save) {
     const weatherIcon =
     "http://openweathermap.org/img/w/"+get(state.weather, "weather[0].icon")+".png";
     const body =
-    "# It rained the latest time in Paris on *"+date+"*.\n"+
+    "# It rained the last time in Paris on *"+date+"*.\n"+
     "## "+droplets+"  ["+weatherIcon+"]("+weatherIcon+") "+weatherDesc+"\n"+
     "Humidity "+get(state.weather, "main.humidity", "?")+"%\n";
     const description = droplets+" "+weatherDesc;
