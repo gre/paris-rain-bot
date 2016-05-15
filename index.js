@@ -81,8 +81,7 @@ function main (state, save) {
       setState({
         weather,
         totalRain: state.totalRain + rain,
-        timeLastFetch: now(),
-        timeLastCommit: now()
+        timeLastFetch: now()
       });
     })
     .catch(e => console.warn("Failed to get weather: "+e))
