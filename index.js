@@ -101,7 +101,7 @@ function main (state, save) {
       get(state.weather, "snow.3h") ? "⛷" : "💧"
     ).join("")+" ";
     const weatherDesc = get(weather, "weather[0].description", "unknown");
-    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY");
+    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY, hh:mm a");
     const weatherIcon =
     "http://openweathermap.org/img/w/"+get(weather, "weather[0].icon")+".png";
     const body =
