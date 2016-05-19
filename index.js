@@ -101,13 +101,13 @@ function main (state, save) {
       get(state.weather, "snow.3h") ? "⛷" : "💧"
     ).join("")+" ";
     const weatherDesc = get(weather, "weather[0].description", "unknown");
-    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY, hh:mm a");
+    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY [around] hh:mm a");
     const weatherIcon =
     "http://openweathermap.org/img/w/"+get(weather, "weather[0].icon")+".png";
     const body =
-    "# It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*.\n"+
-    "## "+droplets+"  !["+weatherIcon+"]("+weatherIcon+") "+weatherDesc+"\n"+
-    "Humidity "+get(state.weather, "main.humidity", "?")+"%\n";
+    "## It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*\n"+
+    droplets+"  !["+weatherIcon+"]("+weatherIcon+") **"+weatherDesc+"** "+
+    "*Humidity "+get(state.weather, "main.humidity", "?")+"%*\n";
     const description = droplets+" "+weatherDesc;
     return command("echo '"+body+"' > README.md", { cwd: gitDir })
     .then(() => git("commit -a -m '"+description+"'"))
