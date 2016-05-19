@@ -116,7 +116,7 @@ function main (state, save) {
   }
 
   function scheduleNextCommit () {
-    if (state.totalRain * (now()-state.timeLastCommit) > THREE_HOURS) {
+    if (state.totalRain >= 1 && state.totalRain * (now()-state.timeLastCommit) > THREE_HOURS) {
       return commitRain()
       .then(o => {
         console.log(o.date+" commit "+o.description);
