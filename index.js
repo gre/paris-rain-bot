@@ -76,7 +76,7 @@ function main (state, save) {
       timeLastCommit: 0
     });
   }
-  log("Start with " + state);
+  log("Start with " + JSON.stringify(state));
 
   // weather check
 
