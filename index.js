@@ -8,6 +8,8 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment");
 
+moment.relativeTimeThreshold("m", 3*60);
+
 const configFile = process.argv[2];
 
 const config = JSON.parse(fs.readFileSync(configFile));
