@@ -96,10 +96,7 @@ function main (state, save) {
   }
   function scheduleNextWeatherCheck () {
     const nextWeatherCheck = Math.max(0, THREE_HOURS-(now()-state.timeLastFetch));
-    log(
-      moment().format("DD/MM/YY HH:mm")+
-      ": Will do next weather check in "+
-      moment.duration(nextWeatherCheck).humanize());
+    log("Will do next weather check in "+moment.duration(nextWeatherCheck).humanize());
     return delay(nextWeatherCheck).then(weatherCheck);
   }
 
