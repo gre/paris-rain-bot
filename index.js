@@ -57,6 +57,13 @@ const fetchCurrentWeather = () =>
   }))
   .then(res => res.status!==200 ? new Error(res.statusText) : res.json());
 
+const log = msg =>
+  console.log(
+    moment().format("DD/MM/YY HH:mm")+
+    ": "+
+    msg
+  );
+
 const THREE_HOURS = 3 * 3600 * 1000;
 
 function main (state, save) {
@@ -69,7 +76,7 @@ function main (state, save) {
       timeLastCommit: 0
     });
   }
-  console.log("Start with", state);
+  log("Start with " + state);
 
   // weather check
 
@@ -77,7 +84,7 @@ function main (state, save) {
     return fetchCurrentWeather()
     .then(weather => {
       const rain = get(weather, "rain.3h", 0) + get(weather, "snow.3h", 0);
-      console.log("rain += "+rain);
+      log("rain += "+rain);
       setState({
         weather,
         totalRain: state.totalRain + rain,
@@ -89,7 +96,10 @@ function main (state, save) {
   }
   function scheduleNextWeatherCheck () {
     const nextWeatherCheck = Math.max(0, THREE_HOURS-(now()-state.timeLastFetch));
-    console.log("Will do next weather check in "+moment.duration(nextWeatherCheck).humanize());
+    log(
+      moment().format("DD/MM/YY HH:mm")+
+      ": Will do next weather check in "+
+      moment.duration(nextWeatherCheck).humanize());
     return delay(nextWeatherCheck).then(weatherCheck);
   }
 
@@ -119,7 +129,7 @@ function main (state, save) {
     if (state.totalRain >= 1 && state.totalRain * (now()-state.timeLastCommit) > THREE_HOURS) {
       return commitRain()
       .then(o => {
-        console.log(o.date+" commit "+o.description);
+        log(o.date+" commit "+o.description);
         setState({
           totalRain: state.totalRain - 1,
           timeLastCommit: now()
