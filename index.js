@@ -85,10 +85,9 @@ function main (state, save) {
   function weatherCheck () {
     return fetchCurrentWeather()
     .then(weather => {
-
       const getNormalized = field =>
         get(weather, [field, "1h"],
-          get(weather, [field, "3h"])/3);
+          get(weather, [field, "3h"], 0)/3);
       const rainLastHour = getNormalized("rain") + getNormalized("snow");
       log("rain += "+rainLastHour);
       setState({
