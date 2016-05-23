@@ -121,9 +121,9 @@ function main (state, save) {
     const body =
     "## It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*\n"+
     droplets+" **"+weatherDesc+"** "+
-    "*Humidity "+get(state.weather, "main.humidity", "?")+"%*\n\n---\n"+
+    "*Humidity "+get(state.weather, "main.humidity", "?")+"%*\n\n"+
     weather.weather.map(w => "!["+w.description+"](http://openweathermap.org/img/w/"+w.icon+".png)").join(" ");
-    const description = droplets+" "+weatherDesc;
+    const description = droplets;
     return command("echo '"+body+"' > README.md", { cwd: gitDir })
     .then(() => git("commit -a -m '"+description+"'"))
     .then(() => git("push origin master"))
