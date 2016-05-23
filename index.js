@@ -66,7 +66,7 @@ const log = msg =>
     msg
   );
 
-const THREE_HOURS = 3 * 3600 * 1000;
+const ONE_HOUR = 3600 * 1000;
 
 function main (state, save) {
   const setState = newState => save(state = Object.assign({}, state, newState));
@@ -85,11 +85,15 @@ function main (state, save) {
   function weatherCheck () {
     return fetchCurrentWeather()
     .then(weather => {
-      const rain = get(weather, "rain.3h", 0) + get(weather, "snow.3h", 0);
-      log("rain += "+rain);
+
+      const getNormalized = field =>
+        get(weather, [field, "1h"],
+          get(weather, [field, "3h"])/3);
+      const rainLastHour = getNormalized("rain") + getNormalized("snow");
+      log("rain += "+rainLastHour);
       setState({
         weather,
-        totalRain: state.totalRain + rain,
+        totalRain: state.totalRain + rainLastHour,
         timeLastFetch: now()
       });
     })
@@ -97,7 +101,7 @@ function main (state, save) {
     .then(scheduleNextWeatherCheck);
   }
   function scheduleNextWeatherCheck () {
-    const nextWeatherCheck = Math.max(0, THREE_HOURS-(now()-state.timeLastFetch));
+    const nextWeatherCheck = Math.max(0, ONE_HOUR-(now()-state.timeLastFetch));
     log("Will do next weather check in "+moment.duration(nextWeatherCheck).humanize());
     return delay(nextWeatherCheck).then(weatherCheck);
   }
@@ -125,7 +129,7 @@ function main (state, save) {
   }
 
   function scheduleNextCommit () {
-    if (state.totalRain >= 1 && state.totalRain * (now()-state.timeLastCommit) > THREE_HOURS) {
+    if (state.totalRain >= 1 && state.totalRain * (now()-state.timeLastCommit) > ONE_HOUR) {
       return commitRain()
       .then(o => {
         log(o.date+" commit "+o.description);
