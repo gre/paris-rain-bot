@@ -86,8 +86,12 @@ function main (state, save) {
     return fetchCurrentWeather()
     .then(weather => {
       const getNormalized = field =>
-        get(weather, [field, "1h"],
-          get(weather, [field, "3h"], 0)/3);
+        get(weather, [field, "1h"], 0) ||
+        (1/3) * get(weather, [field, "3h"], 0) ||
+        (1/6) * get(weather, [field, "6h"], 0) ||
+        (1/12) * get(weather, [field, "12h"], 0) ||
+        (1/24) * get(weather, [field, "24h"], 0) ||
+        (1/24) * get(weather, [field, "day"], 0);
       const rainLastHour = getNormalized("rain") + getNormalized("snow");
       log("rain += "+rainLastHour);
       setState({
