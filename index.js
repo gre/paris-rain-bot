@@ -117,7 +117,7 @@ function main (state, save) {
       get(state.weather, "snow.3h") ? "⛷" : "💧"
     ).join("")+" ";
     const weatherDesc = get(weather, "weather[0].description", "unknown");
-    const date = moment(1000*get(weather, "dt", 0)).format("MMMM Do YYYY [around] hh:mm a");
+    const date = moment(state.timeLastFetch).format("MMMM Do YYYY [around] hh:mm a");
     const body =
     "## It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*\n"+
     droplets+" **"+weatherDesc+"** "+
