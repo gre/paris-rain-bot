@@ -6,7 +6,7 @@ const url = require("url");
 const fetch = require("isomorphic-fetch");
 const fs = require("fs");
 const path = require("path");
-const moment = require("moment");
+const moment = require("moment-timezone");
 
 moment.relativeTimeThreshold("m", 3*60);
 
@@ -117,7 +117,7 @@ function main (state, save) {
       get(state.weather, "snow.3h") ? "⛷" : "💧"
     ).join("")+" ";
     const weatherDesc = get(weather, "weather[0].description", "unknown");
-    const date = moment(state.timeLastFetch).format("MMMM Do YYYY [around] hh:mm a zz");
+    const date = moment(state.timeLastFetch).tz(config.tz).format("MMMM Do YYYY [around] hh:mm a");
     const body =
     "## It rained the last time in "+get(weather, "name", "???")+" on *"+date+"*\n"+
     droplets+" **"+weatherDesc+"** "+

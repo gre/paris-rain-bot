@@ -3,5 +3,6 @@
   "OpenWeatherMapQuery": { "APPID": "???", "q": "Paris" },
   "repository": "_git_repo_to_clone_and_push_onto_",
   "stateFile": "bot-state",
-  "forkDir": "bot-gitfork"
+  "forkDir": "bot-gitfork",
+  "tz": "Europe/Paris"
 }
